@@ -37,7 +37,3 @@ Parameter \(C\) influences the number of waves in the angular direction. Adjusti
 ## Conclusion
 
 Parametric Spiral Art serves as a captivating example of the synthesis between mathematical concepts and visual expression. The dynamic interplay of parameters \(A\), \(B\), and \(C\) allows for an infinite array of unique and aesthetically pleasing patterns.
-
-## References
-
-- Add relevant references here.
