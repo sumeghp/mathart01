@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Art Generator with Controls</title>
+    <style>
+        /* Add some basic styling for the art container */
+        #art-container {
+            width: 800px;
+            height: 600px;
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        /* Style for parameter controls */
+        #parameter-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Style for title text */
+        #title-text {
+            text-anchor: middle;
+            font-size: 18px;
+            font-weight: bold;
+            fill: steelblue;
+        }
+
+        /* Style for equations */
+        #equations-text {
+            text-anchor: middle;
+            font-size: 14px;
+            fill: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="art-container"></div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+        // Set up initial variables
+        const width = 800;
+        const height = 600;
+
+        // Set initial values for parameters A, B, and C
+        let paramA = 1;
+        let paramB = 1;
+        let paramC = 1;
+
+        // Create SVG container
+        const svg = d3.select("#art-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add title to the bottom center of the canvas
+        svg.append("text")
+            .attr("id", "title-text")
+            .attr("x", width / 2)
+            .attr("y", height - 40)
+            .text("Parametric Spiral Art");
+
+        // Add equations to the bottom center of the canvas
+        svg.append("text")
+            .attr("id", "equations-text")
+            .attr("x", width / 2)
+            .attr("y", height - 20)
+            .text("Equations: x(θ) = A * sin(B * θ) * cos(C * θ)     y(θ) = A * sin(B * θ) * sin(C * θ)");
+
+        // Function to generate points for the art based on user-adjustable parameters
+        function generateArtPoints() {
+            const points = [];
+            for (let i = 0; i < 360; i++) {
+                const angle = (i / 180) * Math.PI;
+
+                // Parametric equations for x and y based on user-adjustable parameters
+                const x = width / 2 + paramA * Math.sin(paramB * angle) * Math.cos(paramC * angle);
+                const y = height / 2 + paramA * Math.sin(paramB * angle) * Math.sin(paramC * angle);
+
+                points.push({ x, y });
+            }
+            return points;
+        }
+
+        // Function to update the art with new parameters
+        function updateArt() {
+            const points = generateArtPoints();
+
+            // Clear previous drawing
+            svg.selectAll("path").remove();
+
+            // Draw the generative art
+            svg.append("path")
+                .datum(points)
+                .attr("d", d3.line().x(d => d.x).y(d => d.y))
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 2);
+        }
+
+        // Add controls for parameters A, B, and C inside the iframe
+        const parameterControls = d3.select("#art-container")
+            .append("div")
+            .attr("id", "parameter-controls")
+            .html(`
+                <div>
+                    Parameter A:
+                    <input type="range" min="1" max="100" value="1" id="paramA">
+                    <div class="parameter-explanation">Amplitude of the curve</div>
+                </div>
+                <div>
+                    Parameter B:
+                    <input type="range" min="1" max="10" value="1" id="paramB">
+                    <div class="parameter-explanation">Controls the number of waves in the radial direction</div>
+                </div>
+                <div>
+                    Parameter C:
+                    <input type="range" min="1" max="10" value="1" id="paramC">
+                    <div class="parameter-explanation">Controls the number of waves in the angular direction</div>
+                </div>
+            `);
+
+        // Update parameters and art on control change
+        d3.selectAll("input").on("input", function() {
+            // Update parameters based on user input
+            if (this.id === "paramA") paramA = +this.value;
+            else if (this.id === "paramB") paramB = +this.value;
+            else if (this.id === "paramC") paramC = +this.value;
+
+            // Update the generative art
+            updateArt();
+        });
+
+        // Initial rendering
+        updateArt();
+    </script>
+</body>
+</html>
