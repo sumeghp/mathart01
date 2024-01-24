@@ -1,7 +1,7 @@
 # Mathematical Exploration of Parametric Spiral Art
 
 **Author:** Sumegh 
-**Date:** \today
+**Date:** 24 January 2024
 
 ## Introduction
 
